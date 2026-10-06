@@ -22,7 +22,8 @@ incidencias = cargar_incidencias()
 print("=== IT HELPDESK LAB ===")
 print("1. Crear incidencia")
 print("2. Ver incidencias")
-print("3. Salir")
+print("3. Cerrar incidencia")
+print("4. Salir")
 
 opcion = input("Selecciona una opción: ")
 
@@ -30,7 +31,10 @@ if opcion == "1":
     usuario = input("Nombre del usuario: ")
     problema = input("Describe el problema: ")
 
+    nuevo_id = len(incidencias) + 1
+
     incidencia = {
+        "id": nuevo_id,
         "usuario": usuario,
         "problema": problema,
         "resuelta": False
@@ -46,13 +50,39 @@ elif opcion == "2":
         print("No hay incidencias")
     else:
         for incidencia in incidencias:
+            if incidencia["resuelta"]:
+                estado = "RESUELTA"
+            else:
+                estado = "PENDIENTE"
+
             print(
+                incidencia["id"],
+                "-",
                 incidencia["usuario"],
                 "-",
-                incidencia["problema"]
+                incidencia["problema"],
+                "-",
+                estado
             )
 
 elif opcion == "3":
+    id_buscado = int(input("ID de la incidencia que quieres cerrar: "))
+
+    encontrada = False
+
+    for incidencia in incidencias:
+        if incidencia["id"] == id_buscado:
+            incidencia["resuelta"] = True
+            encontrada = True
+            break
+
+    if encontrada:
+        guardar_incidencias(incidencias)
+        print("Incidencia cerrada correctamente")
+    else:
+        print("No existe una incidencia con ese ID")
+
+elif opcion == "4":
     print("Saliendo del programa...")
 
 else:

@@ -6,9 +6,15 @@ from database import (
     cerrar_incidencia_db
 )
 
+
 def crear_incidencia():
-    usuario = input("Nombre del usuario: ")
-    problema = input("Describe el problema: ")
+    usuario = input("Nombre del usuario: ").strip()
+    problema = input("Describe el problema: ").strip()
+
+    if not usuario or not problema:
+        print("El usuario y el problema no pueden estar vacíos.")
+        logging.warning("Intento de crear una incidencia con datos vacíos")
+        return
 
     insertar_incidencia(usuario, problema)
 
@@ -23,24 +29,25 @@ def crear_incidencia():
 def ver_incidencias():
     incidencias = obtener_incidencias()
 
-    if len(incidencias) == 0:
+    if not incidencias:
         print("No hay incidencias")
-    else:
-        for incidencia in incidencias:
-            if incidencia[3]:
-                estado = "RESUELTA"
-            else:
-                estado = "PENDIENTE"
+        return
 
-            print(
-                incidencia[0],
-                "-",
-                incidencia[1],
-                "-",
-                incidencia[2],
-                "-",
-                estado
-            )
+    for incidencia in incidencias:
+        if incidencia[3]:
+            estado = "RESUELTA"
+        else:
+            estado = "PENDIENTE"
+
+        print(
+            incidencia[0],
+            "-",
+            incidencia[1],
+            "-",
+            incidencia[2],
+            "-",
+            estado
+        )
 
 
 def cerrar_incidencia():

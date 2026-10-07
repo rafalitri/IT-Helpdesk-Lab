@@ -1,71 +1,79 @@
 import logging
 
-from almacenamiento import guardar_incidencias
+from database import (
+    insertar_incidencia,
+    obtener_incidencias,
+    cerrar_incidencia_db
+)
 
-
-def crear_incidencia(incidencias):
+def crear_incidencia():
     usuario = input("Nombre del usuario: ")
     problema = input("Describe el problema: ")
 
-    nuevo_id = len(incidencias) + 1
+    insertar_incidencia(usuario, problema)
 
-    incidencia = {
-        "id": nuevo_id,
-        "usuario": usuario,
-        "problema": problema,
-        "resuelta": False
-    }
-
-    incidencias.append(incidencia)
-
-    guardar_incidencias(incidencias)
-
-    logging.info("Incidencia %s creada", nuevo_id)
+    logging.info(
+        "Nueva incidencia creada para el usuario %s",
+        usuario
+    )
 
     print("Incidencia guardada correctamente")
 
 
-def ver_incidencias(incidencias):
+def ver_incidencias():
+    incidencias = obtener_incidencias()
+
     if len(incidencias) == 0:
         print("No hay incidencias")
     else:
         for incidencia in incidencias:
-            if incidencia["resuelta"]:
+            if incidencia[3]:
                 estado = "RESUELTA"
             else:
                 estado = "PENDIENTE"
 
             print(
-                incidencia["id"],
+                incidencia[0],
                 "-",
-                incidencia["usuario"],
+                incidencia[1],
                 "-",
-                incidencia["problema"],
+                incidencia[2],
                 "-",
                 estado
             )
 
 
-def cerrar_incidencia(incidencias):
+def cerrar_incidencia():
     try:
         id_buscado = int(
             input("ID de la incidencia que quieres cerrar: ")
         )
 
+        incidencias = obtener_incidencias()
+
         encontrada = False
 
         for incidencia in incidencias:
-            if incidencia["id"] == id_buscado:
-                incidencia["resuelta"] = True
+            if incidencia[0] == id_buscado:
                 encontrada = True
                 break
 
         if encontrada:
-            guardar_incidencias(incidencias)
-            logging.info("Incidencia %s cerrada", id_buscado)
+            cerrar_incidencia_db(id_buscado)
+
+            logging.info(
+                "Incidencia %s cerrada",
+                id_buscado
+            )
+
             print("Incidencia cerrada correctamente")
+
         else:
-            logging.warning("Se intentó cerrar un ID inexistente: %s", id_buscado)
+            logging.warning(
+                "Se intentó cerrar un ID inexistente: %s",
+                id_buscado
+            )
+
             print("No existe una incidencia con ese ID")
 
     except ValueError:

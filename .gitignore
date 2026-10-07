@@ -1,1 +1,3 @@
 incidencias.json
+__pycache__/
+*.pyc

@@ -63,3 +63,43 @@ def test_cerrar_incidencia(capsys, monkeypatch):
 
     assert incidencias[0]["resuelta"] is True
     assert "Incidencia cerrada correctamente" in salida
+
+def test_cerrar_incidencia_id_inexistente(capsys, monkeypatch):
+    incidencias = [
+        {
+            "id": 1,
+            "usuario": "Rafa",
+            "problema": "No funciona internet",
+            "resuelta": False
+        }
+    ]
+
+    monkeypatch.setattr("builtins.input", lambda _: "99")
+    monkeypatch.setattr("incidencias.guardar_incidencias", lambda _: None)
+
+    cerrar_incidencia(incidencias)
+
+    salida = capsys.readouterr().out
+
+    assert incidencias[0]["resuelta"] is False
+    assert "No existe una incidencia con ese ID" in salida
+
+
+def test_cerrar_incidencia_id_no_numerico(capsys, monkeypatch):
+    incidencias = [
+        {
+            "id": 1,
+            "usuario": "Rafa",
+            "problema": "No funciona internet",
+            "resuelta": False
+        }
+    ]
+
+    monkeypatch.setattr("builtins.input", lambda _: "abc")
+
+    cerrar_incidencia(incidencias)
+
+    salida = capsys.readouterr().out
+
+    assert incidencias[0]["resuelta"] is False
+    assert "El ID tiene que ser un número" in salida

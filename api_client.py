@@ -1,22 +1,17 @@
 import requests
 
-
-def obtener_datos_api():
-    url = "https://jsonplaceholder.typicode.com/todos/1"
-
+def hacer_peticion(metodo, url, **kwargs):
     try:
-        respuesta = requests.get(
+        respuesta = requests.request(
+            metodo,
             url,
-            timeout=5
+            timeout=5,
+            **kwargs
         )
 
         respuesta.raise_for_status()
 
-        datos = respuesta.json()
-
-        print("Código HTTP:", respuesta.status_code)
-        print("Datos recibidos:")
-        print(datos)
+        return respuesta
 
     except requests.exceptions.Timeout:
         print("La API ha tardado demasiado en responder.")
@@ -30,6 +25,25 @@ def obtener_datos_api():
     except requests.exceptions.RequestException as error:
         print("Error al realizar la petición:", error)
 
+    return None
+
+def obtener_datos_api():
+    url = "https://jsonplaceholder.typicode.com/todos/1"
+
+    respuesta = hacer_peticion(
+        "GET",
+        url
+    )
+
+    if respuesta is None:
+        return
+
+    datos = respuesta.json()
+
+    print("Código HTTP:", respuesta.status_code)
+    print("Datos recibidos:")
+    print(datos)
+
 
 def crear_tarea_api():
     url = "https://jsonplaceholder.typicode.com/todos"
@@ -40,16 +54,18 @@ def crear_tarea_api():
         "completed": False
     }
 
-    respuesta = requests.post(
+    respuesta = hacer_peticion(
+        "POST",
         url,
-        json=nueva_tarea,
-        timeout=5
+        json=nueva_tarea
     )
 
-    print("Código HTTP:", respuesta.status_code)
+    if respuesta is None:
+        return
 
     datos = respuesta.json()
 
+    print("Código HTTP:", respuesta.status_code)
     print("Respuesta de la API:")
     print(datos)
 
@@ -61,30 +77,31 @@ def actualizar_tarea_api():
         "completed": True
     }
 
-    respuesta = requests.patch(
+    respuesta = hacer_peticion(
+        "PATCH",
         url,
-        json=cambios,
-        timeout=5
+        json=cambios
     )
 
-    print("Código HTTP:", respuesta.status_code)
+    if respuesta is None:
+        return
 
     datos = respuesta.json()
 
+    print("Código HTTP:", respuesta.status_code)
     print("Tarea actualizada:")
     print(datos)
 
 def eliminar_tarea_api():
     url = "https://jsonplaceholder.typicode.com/todos/1"
 
-    respuesta = requests.delete(
-        url,
-        timeout=5
+    respuesta = hacer_peticion(
+        "DELETE",
+        url
     )
 
-    print("Código HTTP:", respuesta.status_code)
+    if respuesta is None:
+        return
 
-    if respuesta.status_code == 200:
-        print("Tarea eliminada correctamente")
-    else:
-        print("No se pudo eliminar la tarea")
+    print("Código HTTP:", respuesta.status_code)
+    print("Tarea eliminada correctamente")

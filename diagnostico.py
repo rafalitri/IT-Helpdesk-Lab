@@ -63,3 +63,25 @@ def comprobar_ping(host="8.8.8.8"):
     else:
         print("No se ha podido contactar con", host)
         return False
+
+
+def diagnostico_windows():
+    if platform.system() != "Windows":
+        print("Este diagnóstico solo está disponible en Windows.")
+        return
+
+    print("\n=== DIAGNÓSTICO AVANZADO DE WINDOWS ===")
+
+    resultado = subprocess.run(
+        [
+            "powershell",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            "scripts/diagnostico_windows.ps1"
+        ],
+        text=True
+    )
+
+    if resultado.returncode != 0:
+        print("Error al ejecutar el diagnóstico de Windows.")

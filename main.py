@@ -14,20 +14,15 @@ def cargar_incidencias():
 
 def guardar_incidencias(incidencias):
     with open(ARCHIVO, "w", encoding="utf-8") as archivo:
-        json.dump(incidencias, archivo, indent=4, ensure_ascii=False)
+        json.dump(
+            incidencias,
+            archivo,
+            indent=4,
+            ensure_ascii=False
+        )
 
 
-incidencias = cargar_incidencias()
-
-print("=== IT HELPDESK LAB ===")
-print("1. Crear incidencia")
-print("2. Ver incidencias")
-print("3. Cerrar incidencia")
-print("4. Salir")
-
-opcion = input("Selecciona una opción: ")
-
-if opcion == "1":
+def crear_incidencia(incidencias):
     usuario = input("Nombre del usuario: ")
     problema = input("Describe el problema: ")
 
@@ -45,11 +40,13 @@ if opcion == "1":
 
     print("Incidencia guardada correctamente")
 
-elif opcion == "2":
+
+def ver_incidencias(incidencias):
     if len(incidencias) == 0:
         print("No hay incidencias")
     else:
         for incidencia in incidencias:
+
             if incidencia["resuelta"]:
                 estado = "RESUELTA"
             else:
@@ -65,9 +62,12 @@ elif opcion == "2":
                 estado
             )
 
-elif opcion == "3":
+
+def cerrar_incidencia(incidencias):
     try:
-        id_buscado = int(input("ID de la incidencia que quieres cerrar: "))
+        id_buscado = int(
+            input("ID de la incidencia que quieres cerrar: ")
+        )
 
         encontrada = False
 
@@ -85,6 +85,31 @@ elif opcion == "3":
 
     except ValueError:
         print("El ID tiene que ser un número")
+
+
+# Cargamos las incidencias
+incidencias = cargar_incidencias()
+
+
+# Mostramos el menú
+print("=== IT HELPDESK LAB ===")
+print("1. Crear incidencia")
+print("2. Ver incidencias")
+print("3. Cerrar incidencia")
+print("4. Salir")
+
+opcion = input("Selecciona una opción: ")
+
+
+# Procesamos la opción
+if opcion == "1":
+    crear_incidencia(incidencias)
+
+elif opcion == "2":
+    ver_incidencias(incidencias)
+
+elif opcion == "3":
+    cerrar_incidencia(incidencias)
 
 elif opcion == "4":
     print("Saliendo del programa...")

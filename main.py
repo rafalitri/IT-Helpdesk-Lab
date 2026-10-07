@@ -7,6 +7,7 @@ from diagnostico import (
     mostrar_info_red,
     diagnostico_windows
 )
+from api_client import obtener_datos_api
 
 
 logging.basicConfig(
@@ -28,7 +29,8 @@ def main():
         print("4. Diagnóstico del sistema")
         print("5. Diagnóstico de red")
         print("6. Diagnóstico avanzado de Windows")
-        print("7. Salir")
+        print("7. Consultar API")
+        print("8. Salir")
 
         opcion = input("Selecciona una opción: ")
 
@@ -51,9 +53,11 @@ def main():
             diagnostico_windows()
 
         elif opcion == "7":
+            obtener_datos_api()
+
+        elif opcion == "8":
             print("Saliendo del programa...")
             break
-
         else:
             print("Opción incorrecta")
 

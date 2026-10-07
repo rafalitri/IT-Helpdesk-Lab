@@ -1,3 +1,4 @@
+import logging
 import json
 import os
 
@@ -6,10 +7,16 @@ ARCHIVO = "incidencias.json"
 
 def cargar_incidencias():
     if not os.path.exists(ARCHIVO):
+        logging.info("No existe el archivo de incidencias. Se inicia una lista vacía.")
         return []
 
-    with open(ARCHIVO, "r", encoding="utf-8") as archivo:
-        return json.load(archivo)
+    try:
+        with open(ARCHIVO, "r", encoding="utf-8") as archivo:
+            return json.load(archivo)
+
+    except json.JSONDecodeError:
+        logging.error("El archivo de incidencias contiene JSON no válido.")
+        return []
 
 
 def guardar_incidencias(incidencias):

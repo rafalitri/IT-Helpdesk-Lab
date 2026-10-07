@@ -66,21 +66,25 @@ elif opcion == "2":
             )
 
 elif opcion == "3":
-    id_buscado = int(input("ID de la incidencia que quieres cerrar: "))
+    try:
+        id_buscado = int(input("ID de la incidencia que quieres cerrar: "))
 
-    encontrada = False
+        encontrada = False
 
-    for incidencia in incidencias:
-        if incidencia["id"] == id_buscado:
-            incidencia["resuelta"] = True
-            encontrada = True
-            break
+        for incidencia in incidencias:
+            if incidencia["id"] == id_buscado:
+                incidencia["resuelta"] = True
+                encontrada = True
+                break
 
-    if encontrada:
-        guardar_incidencias(incidencias)
-        print("Incidencia cerrada correctamente")
-    else:
-        print("No existe una incidencia con ese ID")
+        if encontrada:
+            guardar_incidencias(incidencias)
+            print("Incidencia cerrada correctamente")
+        else:
+            print("No existe una incidencia con ese ID")
+
+    except ValueError:
+        print("El ID tiene que ser un número")
 
 elif opcion == "4":
     print("Saliendo del programa...")

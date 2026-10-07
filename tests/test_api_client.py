@@ -9,7 +9,7 @@ def test_api_timeout(capsys, monkeypatch):
 
     monkeypatch.setattr(
         requests,
-        "get",
+        "request",
         simular_timeout
     )
 
@@ -26,7 +26,7 @@ def test_api_error_conexion(capsys, monkeypatch):
 
     monkeypatch.setattr(
         requests,
-        "get",
+        "request",
         simular_error_conexion
     )
 
@@ -48,7 +48,7 @@ def test_api_error_http(capsys, monkeypatch):
 
     monkeypatch.setattr(
         requests,
-        "get",
+        "request",
         lambda *args, **kwargs: RespuestaFalsa()
     )
 
@@ -57,3 +57,53 @@ def test_api_error_http(capsys, monkeypatch):
     salida = capsys.readouterr().out
 
     assert "error HTTP" in salida
+
+
+def test_hacer_peticion_correcta(monkeypatch):
+    class RespuestaFalsa:
+        status_code = 200
+
+        def raise_for_status(self):
+            pass
+
+    def request_falso(metodo, url, timeout, **kwargs):
+        assert metodo == "POST"
+        assert url == "https://ejemplo.com/api"
+        assert timeout == 5
+        assert kwargs == {
+            "json": {"nombre": "Rafa"}
+        }
+
+        return RespuestaFalsa()
+
+    monkeypatch.setattr(
+        requests,
+        "request",
+        request_falso
+    )
+
+    respuesta = api_client.hacer_peticion(
+        "POST",
+        "https://ejemplo.com/api",
+        json={"nombre": "Rafa"}
+    )
+
+    assert respuesta.status_code == 200
+
+
+def test_hacer_peticion_devuelve_none_si_falla(monkeypatch):
+    def request_falso(*args, **kwargs):
+        raise requests.exceptions.Timeout
+
+    monkeypatch.setattr(
+        requests,
+        "request",
+        request_falso
+    )
+
+    respuesta = api_client.hacer_peticion(
+        "GET",
+        "https://ejemplo.com/api"
+    )
+
+    assert respuesta is None

@@ -90,29 +90,27 @@ def cerrar_incidencia(incidencias):
 # Cargamos las incidencias
 incidencias = cargar_incidencias()
 
+while True:
+    print("\n=== IT HELPDESK LAB ===")
+    print("1. Crear incidencia")
+    print("2. Ver incidencias")
+    print("3. Cerrar incidencia")
+    print("4. Salir")
 
-# Mostramos el menú
-print("=== IT HELPDESK LAB ===")
-print("1. Crear incidencia")
-print("2. Ver incidencias")
-print("3. Cerrar incidencia")
-print("4. Salir")
+    opcion = input("Selecciona una opción: ")
 
-opcion = input("Selecciona una opción: ")
+    if opcion == "1":
+        crear_incidencia(incidencias)
 
+    elif opcion == "2":
+        ver_incidencias(incidencias)
 
-# Procesamos la opción
-if opcion == "1":
-    crear_incidencia(incidencias)
+    elif opcion == "3":
+        cerrar_incidencia(incidencias)
 
-elif opcion == "2":
-    ver_incidencias(incidencias)
+    elif opcion == "4":
+        print("Saliendo del programa...")
+        break
 
-elif opcion == "3":
-    cerrar_incidencia(incidencias)
-
-elif opcion == "4":
-    print("Saliendo del programa...")
-
-else:
-    print("Opción incorrecta")
+    else:
+        print("Opción incorrecta")

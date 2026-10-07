@@ -20,19 +20,23 @@ def test_crud_database(tmp_path, monkeypatch):
     incidencias = database.obtener_incidencias()
 
     assert len(incidencias) == 1
+    assert incidencias[0][0] == 1
     assert incidencias[0][1] == "Rafa"
     assert incidencias[0][2] == "No funciona internet"
     assert incidencias[0][3] == 0
 
-    database.cerrar_incidencia_db(1)
+    cerrada = database.cerrar_incidencia_db(1)
+
+    assert cerrada is True
 
     incidencias = database.obtener_incidencias()
 
     assert incidencias[0][3] == 1
 
-    database.eliminar_incidencia_db(1)
+    eliminada = database.eliminar_incidencia_db(1)
+
+    assert eliminada is True
 
     incidencias = database.obtener_incidencias()
 
     assert incidencias == []
-    

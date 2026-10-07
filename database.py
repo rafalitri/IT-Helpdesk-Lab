@@ -6,7 +6,6 @@ DATABASE = "helpdesk.db"
 
 def crear_tabla():
     conexion = sqlite3.connect(DATABASE)
-
     cursor = conexion.cursor()
 
     cursor.execute(
@@ -23,6 +22,7 @@ def crear_tabla():
     conexion.commit()
     conexion.close()
 
+
 def insertar_incidencia(usuario, problema):
     conexion = sqlite3.connect(DATABASE)
     cursor = conexion.cursor()
@@ -38,6 +38,7 @@ def insertar_incidencia(usuario, problema):
     conexion.commit()
     conexion.close()
 
+
 def obtener_incidencias():
     conexion = sqlite3.connect(DATABASE)
     cursor = conexion.cursor()
@@ -46,6 +47,7 @@ def obtener_incidencias():
         """
         SELECT id, usuario, problema, resuelta
         FROM incidencias
+        ORDER BY id
         """
     )
 
@@ -69,8 +71,13 @@ def cerrar_incidencia_db(id_incidencia):
         (id_incidencia,)
     )
 
+    encontrada = cursor.rowcount > 0
+
     conexion.commit()
     conexion.close()
+
+    return encontrada
+
 
 def eliminar_incidencia_db(id_incidencia):
     conexion = sqlite3.connect(DATABASE)
@@ -84,5 +91,9 @@ def eliminar_incidencia_db(id_incidencia):
         (id_incidencia,)
     )
 
+    eliminada = cursor.rowcount > 0
+
     conexion.commit()
     conexion.close()
+
+    return eliminada

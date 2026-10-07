@@ -1,4 +1,4 @@
-from incidencias import ver_incidencias
+from incidencias import ver_incidencias, cerrar_incidencia
 
 
 def test_ver_incidencias_pendiente(capsys):
@@ -43,3 +43,23 @@ def test_ver_incidencias_vacia(capsys):
     salida = capsys.readouterr().out
 
     assert "No hay incidencias" in salida
+
+def test_cerrar_incidencia(capsys, monkeypatch):
+    incidencias = [
+        {
+            "id": 1,
+            "usuario": "Rafa",
+            "problema": "No funciona internet",
+            "resuelta": False
+        }
+    ]
+
+    monkeypatch.setattr("builtins.input", lambda _: "1")
+    monkeypatch.setattr("incidencias.guardar_incidencias", lambda _: None)
+
+    cerrar_incidencia(incidencias)
+
+    salida = capsys.readouterr().out
+
+    assert incidencias[0]["resuelta"] is True
+    assert "Incidencia cerrada correctamente" in salida

@@ -1,44 +1,47 @@
 from incidencias import ver_incidencias, cerrar_incidencia
 
 
-def test_ver_incidencias_pendiente(capsys):
+def test_ver_incidencias_pendiente(capsys, monkeypatch):
     incidencias = [
-        {
-            "id": 1,
-            "usuario": "Rafa",
-            "problema": "No funciona internet",
-            "resuelta": False
-        }
+        (1, "Rafa", "No funciona internet", 0)
     ]
 
-    ver_incidencias(incidencias)
+    monkeypatch.setattr(
+        "incidencias.obtener_incidencias",
+        lambda: incidencias
+    )
+
+    ver_incidencias()
 
     salida = capsys.readouterr().out
 
     assert "1 - Rafa - No funciona internet - PENDIENTE" in salida
 
 
-def test_ver_incidencias_resuelta(capsys):
+def test_ver_incidencias_resuelta(capsys, monkeypatch):
     incidencias = [
-        {
-            "id": 2,
-            "usuario": "Bea",
-            "problema": "No enciende el PC",
-            "resuelta": True
-        }
+        (2, "Bea", "No enciende el PC", 1)
     ]
 
-    ver_incidencias(incidencias)
+    monkeypatch.setattr(
+        "incidencias.obtener_incidencias",
+        lambda: incidencias
+    )
+
+    ver_incidencias()
 
     salida = capsys.readouterr().out
 
     assert "2 - Bea - No enciende el PC - RESUELTA" in salida
 
 
-def test_ver_incidencias_vacia(capsys):
-    incidencias = []
+def test_ver_incidencias_vacia(capsys, monkeypatch):
+    monkeypatch.setattr(
+        "incidencias.obtener_incidencias",
+        lambda: []
+    )
 
-    ver_incidencias(incidencias)
+    ver_incidencias()
 
     salida = capsys.readouterr().out
 
@@ -46,60 +49,63 @@ def test_ver_incidencias_vacia(capsys):
 
 def test_cerrar_incidencia(capsys, monkeypatch):
     incidencias = [
-        {
-            "id": 1,
-            "usuario": "Rafa",
-            "problema": "No funciona internet",
-            "resuelta": False
-        }
+        (1, "Rafa", "No funciona internet", 0)
     ]
 
-    monkeypatch.setattr("builtins.input", lambda _: "1")
-    monkeypatch.setattr("incidencias.guardar_incidencias", lambda _: None)
+    llamadas = []
 
-    cerrar_incidencia(incidencias)
+    monkeypatch.setattr("builtins.input", lambda _: "1")
+
+    monkeypatch.setattr(
+        "incidencias.obtener_incidencias",
+        lambda: incidencias
+    )
+
+    monkeypatch.setattr(
+        "incidencias.cerrar_incidencia_db",
+        lambda id_incidencia: llamadas.append(id_incidencia)
+    )
+
+    cerrar_incidencia()
 
     salida = capsys.readouterr().out
 
-    assert incidencias[0]["resuelta"] is True
+    assert llamadas == [1]
     assert "Incidencia cerrada correctamente" in salida
+
 
 def test_cerrar_incidencia_id_inexistente(capsys, monkeypatch):
     incidencias = [
-        {
-            "id": 1,
-            "usuario": "Rafa",
-            "problema": "No funciona internet",
-            "resuelta": False
-        }
+        (1, "Rafa", "No funciona internet", 0)
     ]
 
-    monkeypatch.setattr("builtins.input", lambda _: "99")
-    monkeypatch.setattr("incidencias.guardar_incidencias", lambda _: None)
+    llamadas = []
 
-    cerrar_incidencia(incidencias)
+    monkeypatch.setattr("builtins.input", lambda _: "99")
+
+    monkeypatch.setattr(
+        "incidencias.obtener_incidencias",
+        lambda: incidencias
+    )
+
+    monkeypatch.setattr(
+        "incidencias.cerrar_incidencia_db",
+        lambda id_incidencia: llamadas.append(id_incidencia)
+    )
+
+    cerrar_incidencia()
 
     salida = capsys.readouterr().out
 
-    assert incidencias[0]["resuelta"] is False
+    assert llamadas == []
     assert "No existe una incidencia con ese ID" in salida
 
 
 def test_cerrar_incidencia_id_no_numerico(capsys, monkeypatch):
-    incidencias = [
-        {
-            "id": 1,
-            "usuario": "Rafa",
-            "problema": "No funciona internet",
-            "resuelta": False
-        }
-    ]
-
     monkeypatch.setattr("builtins.input", lambda _: "abc")
 
-    cerrar_incidencia(incidencias)
+    cerrar_incidencia()
 
     salida = capsys.readouterr().out
 
-    assert incidencias[0]["resuelta"] is False
     assert "El ID tiene que ser un número" in salida

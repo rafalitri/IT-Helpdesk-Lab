@@ -1,7 +1,8 @@
 import logging
 
-from almacenamiento import cargar_incidencias
+from database import crear_tabla
 from incidencias import crear_incidencia, ver_incidencias, cerrar_incidencia
+
 
 logging.basicConfig(
     filename="helpdesk.log",
@@ -10,7 +11,8 @@ logging.basicConfig(
     encoding="utf-8"
 )
 
-incidencias = cargar_incidencias()
+crear_tabla()
+
 
 while True:
     print("\n=== IT HELPDESK LAB ===")
@@ -22,13 +24,13 @@ while True:
     opcion = input("Selecciona una opción: ")
 
     if opcion == "1":
-        crear_incidencia(incidencias)
+        crear_incidencia()
 
     elif opcion == "2":
-        ver_incidencias(incidencias)
+        ver_incidencias()
 
     elif opcion == "3":
-        cerrar_incidencia(incidencias)
+        cerrar_incidencia()
 
     elif opcion == "4":
         print("Saliendo del programa...")

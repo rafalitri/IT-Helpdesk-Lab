@@ -1,6 +1,14 @@
+import logging
+
 from almacenamiento import cargar_incidencias
 from incidencias import crear_incidencia, ver_incidencias, cerrar_incidencia
 
+logging.basicConfig(
+    filename="helpdesk.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    encoding="utf-8"
+)
 
 incidencias = cargar_incidencias()
 

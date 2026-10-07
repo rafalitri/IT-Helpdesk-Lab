@@ -1,3 +1,5 @@
+import logging
+
 from almacenamiento import guardar_incidencias
 
 
@@ -15,7 +17,10 @@ def crear_incidencia(incidencias):
     }
 
     incidencias.append(incidencia)
+
     guardar_incidencias(incidencias)
+
+    logging.info("Incidencia %s creada", nuevo_id)
 
     print("Incidencia guardada correctamente")
 
@@ -57,9 +62,12 @@ def cerrar_incidencia(incidencias):
 
         if encontrada:
             guardar_incidencias(incidencias)
+            logging.info("Incidencia %s cerrada", id_buscado)
             print("Incidencia cerrada correctamente")
         else:
+            logging.warning("Se intentó cerrar un ID inexistente: %s", id_buscado)
             print("No existe una incidencia con ese ID")
 
     except ValueError:
+        logging.warning("Se introdujo un ID no numérico")
         print("El ID tiene que ser un número")

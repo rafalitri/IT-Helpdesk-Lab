@@ -198,6 +198,16 @@ def asignar_tecnico(incidencia_id, tecnico_id):
     conexion = sqlite3.connect(DATABASE)
     cursor = conexion.cursor()
 
+    # Eliminar una asignación anterior si existe
+    cursor.execute(
+        """
+        DELETE FROM asignaciones
+        WHERE incidencia_id = ?
+        """,
+        (incidencia_id,)
+    )
+
+    # Crear la nueva asignación
     cursor.execute(
         """
         INSERT INTO asignaciones (incidencia_id, tecnico_id)
@@ -262,3 +272,22 @@ def obtener_todas_incidencias_con_tecnico():
     conexion.close()
 
     return resultados
+
+
+def obtener_tecnicos():
+    conexion = sqlite3.connect(DATABASE)
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        """
+        SELECT id, nombre
+        FROM tecnicos
+        ORDER BY id
+        """
+    )
+
+    tecnicos = cursor.fetchall()
+
+    conexion.close()
+
+    return tecnicos

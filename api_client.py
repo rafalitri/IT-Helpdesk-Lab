@@ -1,5 +1,6 @@
 import requests
 
+
 def hacer_peticion(metodo, url, **kwargs):
     try:
         respuesta = requests.request(
@@ -26,6 +27,7 @@ def hacer_peticion(metodo, url, **kwargs):
         print("Error al realizar la petición:", error)
 
     return None
+
 
 def obtener_datos_api():
     url = "https://jsonplaceholder.typicode.com/todos/1"
@@ -91,6 +93,7 @@ def actualizar_tarea_api():
     print("Código HTTP:", respuesta.status_code)
     print("Tarea actualizada:")
     print(datos)
+
 
 def eliminar_tarea_api():
     url = "https://jsonplaceholder.typicode.com/todos/1"

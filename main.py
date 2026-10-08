@@ -33,6 +33,7 @@ def main():
     crear_tabla()
 
     while True:
+        print("\n=== IT HELPDESK LAB ===")
         print("1. Crear incidencia")
         print("2. Ver incidencias")
         print("3. Cerrar incidencia")

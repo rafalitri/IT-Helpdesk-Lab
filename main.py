@@ -1,12 +1,23 @@
 import logging
 
 from database import crear_tabla
-from incidencias import crear_incidencia, ver_incidencias, cerrar_incidencia
+
+from incidencias import (
+    crear_incidencia,
+    ver_incidencias,
+    cerrar_incidencia,
+    ver_incidencias_con_tecnico,
+    crear_tecnico,
+    ver_tecnicos,
+    asignar_tecnico_a_incidencia
+)
+
 from diagnostico import (
     mostrar_info_sistema,
     mostrar_info_red,
     diagnostico_windows
 )
+
 from api_client import obtener_datos_api
 
 
@@ -22,7 +33,6 @@ def main():
     crear_tabla()
 
     while True:
-        print("\n=== IT HELPDESK LAB ===")
         print("1. Crear incidencia")
         print("2. Ver incidencias")
         print("3. Cerrar incidencia")
@@ -30,7 +40,11 @@ def main():
         print("5. Diagnóstico de red")
         print("6. Diagnóstico avanzado de Windows")
         print("7. Consultar API")
-        print("8. Salir")
+        print("8. Ver incidencias con técnico")
+        print("9. Crear técnico")
+        print("10. Ver técnicos")
+        print("11. Asignar técnico a incidencia")
+        print("12. Salir")
 
         opcion = input("Selecciona una opción: ")
 
@@ -54,8 +68,20 @@ def main():
 
         elif opcion == "7":
             obtener_datos_api()
-
+        
         elif opcion == "8":
+            ver_incidencias_con_tecnico()
+        
+        elif opcion == "9":
+            crear_tecnico()
+
+        elif opcion == "10":
+            ver_tecnicos()
+
+        elif opcion == "11":
+            asignar_tecnico_a_incidencia()
+
+        elif opcion == "12":
             print("Saliendo del programa...")
             break
         else:

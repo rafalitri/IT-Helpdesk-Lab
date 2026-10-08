@@ -3,7 +3,12 @@ import logging
 from database import (
     insertar_incidencia,
     obtener_incidencias,
-    cerrar_incidencia_db
+    cerrar_incidencia_db,
+    obtener_todas_incidencias_con_tecnico,
+    insertar_tecnico,
+    obtener_tecnicos,
+    obtener_incidencias_pendientes,
+    asignar_tecnico
 )
 
 
@@ -86,3 +91,130 @@ def cerrar_incidencia():
     except ValueError:
         logging.warning("Se introdujo un ID no numérico")
         print("El ID tiene que ser un número")
+
+
+def ver_incidencias_con_tecnico():
+    incidencias = obtener_todas_incidencias_con_tecnico()
+
+    if not incidencias:
+        print("No hay incidencias")
+        return
+
+    for incidencia in incidencias:
+        id_incidencia = incidencia[0]
+        usuario = incidencia[1]
+        problema = incidencia[2]
+        tecnico = incidencia[3]
+
+        if tecnico is None:
+            tecnico = "SIN ASIGNAR"
+
+        print(
+            id_incidencia,
+            "-",
+            usuario,
+            "-",
+            problema,
+            "- Técnico:",
+            tecnico
+        )
+
+
+def crear_tecnico():
+    nombre = input("Nombre del técnico: ").strip()
+
+    if not nombre:
+        print("El nombre del técnico no puede estar vacío.")
+        return
+
+    insertar_tecnico(nombre)
+
+    print("Técnico creado correctamente")
+
+
+def ver_tecnicos():
+    tecnicos = obtener_tecnicos()
+
+    if not tecnicos:
+        print("No hay técnicos")
+        return
+
+    print("\n=== TÉCNICOS ===")
+
+    for tecnico in tecnicos:
+        print(
+            tecnico[0],
+            "-",
+            tecnico[1]
+        )
+
+
+def asignar_tecnico_a_incidencia():
+    incidencias = obtener_incidencias_pendientes()
+    tecnicos = obtener_tecnicos()
+
+    if not incidencias:
+        print("No hay incidencias pendientes.")
+        return
+
+    if not tecnicos:
+        print("No hay técnicos disponibles.")
+        return
+
+    print("\n=== INCIDENCIAS PENDIENTES ===")
+
+    for incidencia in incidencias:
+        print(
+            incidencia[0],
+            "-",
+            incidencia[1],
+            "-",
+            incidencia[2]
+        )
+
+    print("\n=== TÉCNICOS ===")
+
+    for tecnico in tecnicos:
+        print(
+            tecnico[0],
+            "-",
+            tecnico[1]
+        )
+
+    try:
+        id_incidencia = int(
+            input("ID de la incidencia: ")
+        )
+
+        id_tecnico = int(
+            input("ID del técnico: ")
+        )
+
+    except ValueError:
+        print("Los IDs tienen que ser números.")
+        return
+
+    incidencia_existe = any(
+        incidencia[0] == id_incidencia
+        for incidencia in incidencias
+    )
+
+    tecnico_existe = any(
+        tecnico[0] == id_tecnico
+        for tecnico in tecnicos
+    )
+
+    if not incidencia_existe:
+        print("La incidencia no existe o no está pendiente.")
+        return
+
+    if not tecnico_existe:
+        print("El técnico no existe.")
+        return
+
+    asignar_tecnico(
+        id_incidencia,
+        id_tecnico
+    )
+
+    print("Técnico asignado correctamente")

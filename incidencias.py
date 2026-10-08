@@ -61,18 +61,9 @@ def cerrar_incidencia():
             input("ID de la incidencia que quieres cerrar: ")
         )
 
-        incidencias = obtener_incidencias()
-
-        encontrada = False
-
-        for incidencia in incidencias:
-            if incidencia[0] == id_buscado:
-                encontrada = True
-                break
+        encontrada = cerrar_incidencia_db(id_buscado)
 
         if encontrada:
-            cerrar_incidencia_db(id_buscado)
-
             logging.info(
                 "Incidencia %s cerrada",
                 id_buscado
